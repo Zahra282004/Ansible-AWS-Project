@@ -1,1 +1,42 @@
+---
+# handling errors
+      - name: Checkk openssh & openssl
+        ansible.builtin.apt:
+          name: "{{ item }}"
+          state: latest
+        loop:
+          - openssh
+          - openssl
+          
+# openssh is not present, shows error, we will ignore it by the following command
+        ignore_errors: yes
+
+      - name: Verify if docker is present
+        ansible.builtin.command: docker --version
+# docker is def not present in the instaces so ignore errors
+        ignore_errors: yes  
+# we store our error output in a register var
+        register: result
+
+#the error result is actuall a json with an attribute failed:true
+      - name: debugging
+        ansible.builtin.debug:
+          var: result
+
+      - name: Install Docker on Debian (Ubuntu)
+        ansible.builtin.apt:
+          name: docker.io
+          state: present
+          update_cache: yes
+        when:
+          - ansible_os_family == "Debian"
+          - result.failed
+
+      - name: Install Docker on RedHat (Amazon Linux)
+        ansible.builtin.yum:
+          name: docker
+          state: present
+        when: 
+         - ansible_os_family == "RedHat"
+         - result.failed
 
