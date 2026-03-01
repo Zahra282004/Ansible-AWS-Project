@@ -1,0 +1,6 @@
+---
+  - hosts: localhost   #means k isi local machine par chalega awsi
+    connection: local   #connection isi machine par hoga
+    roles:
+      - ec2_create
+      
