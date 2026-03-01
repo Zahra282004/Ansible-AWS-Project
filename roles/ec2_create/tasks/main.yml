@@ -1,1 +1,24 @@
+---
+- name: Start EC2 instance with EBS
+  amazon.aws.ec2_instance:
+    name: "{{ item.name }}"
+    instance_type: "{{ type }}"
+    key_name: "{{ key }}"
+    security_groups:
+      - default
+    region: "{{ region }}"
+    aws_access_key: "{{ ec2_access_key }}"
+    aws_secret_key: "{{ ec2_secret_key }}"
+    network:
+      assign_public_ip: true
+    image_id: "{{ item.image }}"
+    volumes:
+      - device_name: /dev/sda1
+        ebs:
+          volume_size: 8
+          delete_on_termination: true
+  loop:
+    - {image: ami-0f3caa1cf4417e51b , name: node1}
+    - {image: ami-0b6c6ebed2801a5cb , name: node2}
+    - {image: ami-0f3caa1cf4417e51b , name: node3 }
 
