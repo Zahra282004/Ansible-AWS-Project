@@ -1,5 +1,6 @@
 ---
 - name: Start EC2 instance with EBS
+# amazon.aws collection is installed ,therefore using the module
   amazon.aws.ec2_instance:
     name: "{{ item.name }}"
     instance_type: "{{ type }}"
